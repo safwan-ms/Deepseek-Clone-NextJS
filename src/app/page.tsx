@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { assets } from "../../assets/assets";
+import Sidebar from "@/components/Sidebar";
 
 const Home = () => {
   const [expand, setExpand] = useState<boolean>(false);
@@ -12,7 +13,7 @@ const Home = () => {
     <div className="min-h-screen bg-[#1e1f22] text-white">
       <div className="flex h-screen">
         {/* Sidebar */}
-
+        <Sidebar expand={expand} setExpand={setExpand} />
         <div className="flex flex-1 flex-col items-center justify-center px-6 pb-8 bg-[#292a2d] shadow-lg rounded-r-2xl relative transition-all duration-300 w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
           <div className="md:hidden absolute top-6 left-0 w-full px-4 flex items-center justify-between">
             <Image
