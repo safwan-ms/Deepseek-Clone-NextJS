@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { assets } from "../../assets/assets";
+import { useClerk, UserButton } from "@clerk/nextjs";
+import { useAppContext } from "../../contexts/AppContext";
 
 type SidebarProps = {
   expand: boolean;
@@ -7,6 +9,9 @@ type SidebarProps = {
 };
 
 const Sidebar = ({ expand, setExpand }: SidebarProps) => {
+  const { openSignIn } = useClerk();
+  const { user } = useAppContext();
+
   return (
     <div
       className={`flex flex-col justify-between bg-[#212327] pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${
@@ -117,12 +122,19 @@ const Sidebar = ({ expand, setExpand }: SidebarProps) => {
             </div>
           </div>
         </div>
+
         <div
+          onClick={user ? null : openSignIn}
           className={`flex items-center ${
             expand ? "hover:bg-white/10 rounded-lg" : "justify-center w-full"
           } gap-3 text-white/60 text-sm p-2 mt-2 cursor-pointer`}
         >
-          <Image src={assets.profile_icon} alt="" className="w-7" />
+          {user ? (
+            <UserButton />
+          ) : (
+            <Image src={assets.profile_icon} alt="" className="w-7" />
+          )}
+
           {expand && <span>My Profile</span>}
         </div>
       </div>
