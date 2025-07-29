@@ -124,7 +124,7 @@ const Sidebar = ({ expand, setExpand }: SidebarProps) => {
         </div>
 
         <div
-          onClick={user ? null : openSignIn}
+          onClick={!user ? () => openSignIn?.() : undefined}
           className={`flex items-center ${
             expand ? "hover:bg-white/10 rounded-lg" : "justify-center w-full"
           } gap-3 text-white/60 text-sm p-2 mt-2 cursor-pointer`}
