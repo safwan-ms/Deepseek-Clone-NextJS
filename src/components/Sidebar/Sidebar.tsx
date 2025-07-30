@@ -1,6 +1,6 @@
 import SidebarToggler from "./SidebarToggler";
 import NewChatButton from "./NewChatButton";
-import ChatLabel from "../ChatLabel";
+import ChatLabel from "./ChatLabel";
 import { useState } from "react";
 import GetAppSection from "./GetAppSection";
 import ProfileLink from "./ProfileLink";

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { assets } from "../../assets/assets";
 import Sidebar from "@/components/Sidebar/Sidebar";
-import PromptBox from "@/components/PromptBox";
+import PromptBox from "@/components/ChatInput/PromptBox";
 
 const Home = () => {
   const [expand, setExpand] = useState<boolean>(false);
