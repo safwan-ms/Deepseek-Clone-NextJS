@@ -4,6 +4,7 @@ import { useState } from "react";
 import { assets } from "../../assets/assets";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import PromptBox from "@/components/ChatInput/PromptBox";
+import Message from "@/components/Message/Message";
 
 const Home = () => {
   const [expand, setExpand] = useState<boolean>(false);
@@ -39,7 +40,9 @@ const Home = () => {
               <p className="text-sm mt-2">How can I help you today?</p>
             </>
           ) : (
-            <div></div>
+            <div>
+              <Message role="user" content="What is next js" />
+            </div>
           )}
           {/* Prompt box */}
           <PromptBox isLoading={isLoading} setIsLoading={setIsLoading} />
