@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+// Extend the global namespace to include mongoose caching
+declare global {
+  var mongoose: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  };
+}
+
 let cached = global.mongoose;
 
 if (!cached) {
@@ -10,7 +18,7 @@ export const connectDB = async () => {
   if (cached.conn) return cached.conn;
   if (!cached.promise) {
     cached.promise = mongoose
-      .connect(process.env.MONGODB_URI)
+      .connect(process.env.MONGODB_URI!)
       .then((mongoose) => mongoose);
   }
   try {
@@ -21,3 +29,5 @@ export const connectDB = async () => {
   }
   return cached.conn;
 };
+
+export default connectDB;
