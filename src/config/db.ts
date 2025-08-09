@@ -1,32 +1,35 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
-// Extend the global namespace to include mongoose caching
+// Cache the Mongoose connection across hot reloads in development
+type CachedMongoose = {
+  conn: Mongoose | null;
+  promise: Promise<Mongoose> | null;
+};
+
 declare global {
-  var mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  };
+  var _mongoose: CachedMongoose | undefined;
 }
 
-let cached = global.mongoose;
+const cached: CachedMongoose = global._mongoose ?? { conn: null, promise: null };
+global._mongoose = cached;
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
-export const connectDB = async () => {
+export const connectDB = async (): Promise<Mongoose> => {
   if (cached.conn) return cached.conn;
+
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(process.env.MONGODB_URI!)
-      .then((mongoose) => mongoose);
+    const uri = process.env.MONGODB_URI!;
+    cached.promise = mongoose.connect(uri);
   }
+
   try {
     cached.conn = await cached.promise;
     console.log("MongoDB connected successfully✅");
   } catch (error) {
+    cached.conn = null;
     console.log("MongoDB connection failed! ❌", error);
+    throw error;
   }
+
   return cached.conn;
 };
 
