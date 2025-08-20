@@ -1,70 +1,32 @@
-import { Webhook } from "svix";
-import type { WebhookRequiredHeaders } from "svix";
-import { NextResponse } from "next/server";
-import { connectDB } from "@/config/db";
+import connectDB from "@/config/db";
 import User from "@/models/User";
+import { Webhook } from "svix";
+import type { NextRequest } from "next/server";
 
-type ClerkUserEvent = {
-  data: {
-    id: string;
-    email_addresses?: Array<{ email_address: string }>;
-    email_address?: string;
-    first_name?: string;
-    last_name?: string;
-    image_url?: string;
+export async function POST(req: NextRequest) {
+  const wh = new Webhook(process.env.SIGNING_SECRET ?? "");
+  const headerPayload = await headers();
+  const svixHeader = {
+    "svix-id": headerPayload.get("svix-id"),
+    "svix-signature": headerPayload.get("svix-signature"),
   };
-  type: string;
-};
+  //Get the payload and verify it
+  const payload = await req.json();
+  const body = JSON.stringify(payload);
+  const { data, type } = wh.verify(body, svixHeader);
 
-export async function POST(req: Request) {
-  try {
-    const signingSecret = process.env.SIGNING_SECRET;
-    if (!signingSecret) {
-      return NextResponse.json(
-        { message: "SIGNING_SECRET is missing from environment variables" },
-        { status: 500 }
-      );
-    }
+  // Prepare the user data to be stored in database
 
-    const svixHeaders: WebhookRequiredHeaders = {
-      "svix-id": req.headers.get("svix-id") || "",
-      "svix-timestamp": req.headers.get("svix-timestamp") || "",
-      "svix-signature": req.headers.get("svix-signature") || "",
-    };
+  const userData = {
+    clerkId: data.id,
+    email: data.email_addresses?.[0]?.email_address || "",
+    name: `${data.first_name} ${data.last_name}` || "",
+    image: data.image_url || "",
+  };
 
-    if (!svixHeaders["svix-id"] || !svixHeaders["svix-timestamp"] || !svixHeaders["svix-signature"]) {
-      return NextResponse.json({ message: "Missing Svix headers" }, { status: 400 });
-    }
-
-    const wh = new Webhook(signingSecret);
-
-    const payload = await req.json();
-    const body = JSON.stringify(payload);
-    const evt = wh.verify(body, svixHeaders) as ClerkUserEvent;
-    const { data, type } = evt;
-
-    await connectDB();
-
-    const email = data?.email_addresses?.[0]?.email_address ?? data?.email_address ?? "";
-    const name = `${data?.first_name ?? ""} ${data?.last_name ?? ""}`.trim();
-    const image = data?.image_url ?? "";
-
-    const userData = {
-      _id: data.id,
-      email,
-      name,
-      image,
-    };
-
-    await User.findByIdAndUpdate(
-      userData._id,
-      { $set: userData },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-
-    return NextResponse.json({ ok: true, type });
-  } catch (error) {
-    console.error("Clerk webhook handling failed", error);
-    return NextResponse.json({ message: "Webhook handling failed" }, { status: 400 });
-  }
+  await connectDB();
+  await User.findOneAndUpdate({ clerkId: userData.clerkId }, userData, {
+    upsert: true,
+    new: true,
+  });
 }
