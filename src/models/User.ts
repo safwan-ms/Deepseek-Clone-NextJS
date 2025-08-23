@@ -2,41 +2,41 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    _id: { 
-      type: String, 
+    _id: {
+      type: String,
       required: true,
-      unique: true 
+      unique: true,
     },
-    name: { 
-      type: String, 
+    name: {
+      type: String,
       required: true,
       trim: true,
-      minlength: 1
+      minlength: 1,
     },
-    email: { 
-      type: String, 
+    email: {
+      type: String,
       required: true,
       unique: true,
       lowercase: true,
-      trim: true
+      trim: true,
     },
-    image: { 
+    image: {
       type: String,
-      default: ""
+      default: "",
     },
     createdAt: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     updatedAt: {
       type: Date,
-      default: Date.now
-    }
+      default: Date.now,
+    },
   },
-  { 
+  {
     timestamps: true,
     // Ensure _id is not automatically generated
-    _id: false
+    _id: false,
   }
 );
 
@@ -45,7 +45,7 @@ UserSchema.index({ email: 1 });
 UserSchema.index({ _id: 1 });
 
 // Pre-save middleware to update the updatedAt field
-UserSchema.pre('save', function(next) {
+UserSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();
 });
