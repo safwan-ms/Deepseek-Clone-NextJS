@@ -19,11 +19,22 @@ export async function POST(req: NextRequest) {
     // Connect to the database and create a new chat
     await connectDB();
     const newChat = await Chat.create(chatData);
-    return NextResponse.json(newChat, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Chat created",
+        data: newChat,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error creating chat:", error);
     return NextResponse.json(
-      { error: "Failed to create chat" },
+      {
+        success: false,
+        message: "Failed to create chat",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
