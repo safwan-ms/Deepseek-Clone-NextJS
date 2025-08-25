@@ -4,6 +4,8 @@ import { createContext, ReactNode, useContext } from "react";
 
 type AppContextType = {
   user: ReturnType<typeof useUser>["user"];
+  isSignedIn: ReturnType<typeof useUser>["isSignedIn"];
+  isLoaded: ReturnType<typeof useUser>["isLoaded"];
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -17,8 +19,8 @@ export const useAppContext = (): AppContextType => {
 };
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useUser();
-  const value: AppContextType = { user };
+  const { user, isSignedIn, isLoaded } = useUser();
+  const value: AppContextType = { user, isSignedIn, isLoaded };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
