@@ -12,9 +12,9 @@ export async function GET(req: NextRequest) {
         { status: 401 }
       );
     }
-    
+
     const clerk = createClerkClient({
-      secretKey: process.env.CLERK_SECRET_KEY!,
+      secretKey: process.env.CLERK_SECRET_KEY,
     });
     const user = await clerk.users.getUser(userId);
 
