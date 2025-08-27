@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const { userId } = getAuth(req);
+    console.log("USER ID", userId);
     if (!userId) {
       return NextResponse.json(
         { success: false, message: "User not authorized" },
