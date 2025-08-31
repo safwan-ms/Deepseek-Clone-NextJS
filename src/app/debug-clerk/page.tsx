@@ -8,6 +8,9 @@ export default function DebugClerkPage() {
   const { user, isSignedIn, isLoaded } = useUser();
   const [clerkLoaded, setClerkLoaded] = useState<boolean>(false);
   const [networkStatus, setNetworkStatus] = useState<string>("Checking...");
+  const [openRouterResponse, setOpenRouterResponse] = useState<string>("");
+  const [openRouterLoading, setOpenRouterLoading] = useState<boolean>(false);
+  const [openRouterError, setOpenRouterError] = useState<string>("");
 
   useEffect(() => {
     // Check if Clerk script is loaded
@@ -63,6 +66,51 @@ export default function DebugClerkPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  const testOpenRouterAPI = async () => {
+    setOpenRouterLoading(true);
+    setOpenRouterError("");
+    setOpenRouterResponse("");
+
+    try {
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${
+              process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || "YOUR_API_KEY_HERE"
+            }`,
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "DeepSeek Clone Debug",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "deepseek/deepseek-r1:free",
+            messages: [
+              {
+                role: "user",
+                content: "What is the meaning of life?",
+              },
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setOpenRouterResponse(JSON.stringify(data, null, 2));
+    } catch (error) {
+      setOpenRouterError(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
+    } finally {
+      setOpenRouterLoading(false);
+    }
+  };
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Clerk Debug Information</h1>
@@ -105,6 +153,12 @@ export default function DebugClerkPage() {
           <p>
             <strong>CLERK_SECRET_KEY:</strong>{" "}
             {process.env.CLERK_SECRET_KEY ? "✅ Present" : "❌ Missing"}
+          </p>
+          <p>
+            <strong>NEXT_PUBLIC_OPENROUTER_API_KEY:</strong>{" "}
+            {process.env.NEXT_PUBLIC_OPENROUTER_API_KEY
+              ? "✅ Present"
+              : "❌ Missing"}
           </p>
           <p>
             <strong>Key Preview:</strong>{" "}
@@ -206,6 +260,38 @@ export default function DebugClerkPage() {
         >
           Log Debug Info to Console
         </button>
+      </div>
+
+      <div className="mt-4 p-4 bg-purple-800 rounded-lg">
+        <h2 className="text-lg font-semibold mb-2">OpenRouter API Test</h2>
+        <p className="text-purple-200 mb-4">
+          Test the OpenRouter API with DeepSeek model. Make sure to set your
+          NEXT_PUBLIC_OPENROUTER_API_KEY environment variable.
+        </p>
+
+        <button
+          onClick={testOpenRouterAPI}
+          disabled={openRouterLoading}
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {openRouterLoading ? "Testing..." : "Test OpenRouter API"}
+        </button>
+
+        {openRouterError && (
+          <div className="mt-4 p-3 bg-red-900 rounded">
+            <h3 className="font-semibold text-red-200">Error:</h3>
+            <p className="text-red-300">{openRouterError}</p>
+          </div>
+        )}
+
+        {openRouterResponse && (
+          <div className="mt-4 p-3 bg-green-900 rounded">
+            <h3 className="font-semibold text-green-200 mb-2">Response:</h3>
+            <pre className="text-green-300 text-sm overflow-auto max-h-96 whitespace-pre-wrap">
+              {openRouterResponse}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   );
