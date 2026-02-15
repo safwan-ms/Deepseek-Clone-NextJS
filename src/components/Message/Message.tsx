@@ -12,7 +12,7 @@ const Message = ({ role, content }: MessageProps) => {
       className={`w-full text-sm ${role === "user" ? "flex justify-end" : "flex justify-start"}`}
     >
       <div
-        className={`relative max-w-[85%] sm:max-w-[75%] px-5 py-3 rounded-2xl ${
+        className={`relative max-w-[92%] sm:max-w-[85%] md:max-w-[75%] px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl ${
           role === "user"
             ? "bg-[#303030] text-white rounded-tr-sm"
             : "text-white/90 px-0"
@@ -61,17 +61,17 @@ const Message = ({ role, content }: MessageProps) => {
         )}
 
         {role === "user" ? (
-          <p className="leading-relaxed">{content}</p>
+          <p className="leading-relaxed break-words">{content}</p>
         ) : (
-          <div className="flex gap-4">
+          <div className="flex gap-3 sm:gap-4">
             <div className="flex-shrink-0 mt-1">
               <Image
                 alt="logo"
-                className="h-8 w-8 rounded-full border border-white/10 p-0.5"
+                className="h-7 w-7 sm:h-8 sm:w-8 rounded-full border border-white/10 p-0.5"
                 src={assets.logo_icon}
               />
             </div>
-            <div className="flex-1 space-y-2 overflow-hidden leading-relaxed">
+            <div className="flex-1 space-y-2 overflow-hidden leading-relaxed break-words min-w-0">
               {content}
             </div>
           </div>

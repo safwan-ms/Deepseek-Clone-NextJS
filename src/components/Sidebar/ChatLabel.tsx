@@ -15,9 +15,15 @@ interface ChatLabelProps {
     }>
   >;
   expand: boolean;
+  onChatSelect?: () => void;
 }
 
-const ChatLabel = ({ openMenu, setOpenMenu, expand }: ChatLabelProps) => {
+const ChatLabel = ({
+  openMenu,
+  setOpenMenu,
+  expand,
+  onChatSelect,
+}: ChatLabelProps) => {
   const { chats, selectedChat, setSelectedChat, deleteChat, renameChat } =
     useChatContext();
   const [editId, setEditId] = useState("");
@@ -40,7 +46,10 @@ const ChatLabel = ({ openMenu, setOpenMenu, expand }: ChatLabelProps) => {
       {chats.map((chat) => (
         <div
           key={chat._id}
-          onClick={() => setSelectedChat(chat)}
+          onClick={() => {
+            setSelectedChat(chat);
+            onChatSelect?.();
+          }}
           className={`group flex items-center justify-between p-2 rounded-lg text-sm cursor-pointer mb-1 transition-colors ${
             selectedChat?._id === chat._id
               ? "bg-[#404045] text-white"
