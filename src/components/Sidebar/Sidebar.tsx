@@ -2,7 +2,7 @@ import SidebarToggler from "./SidebarToggler";
 import NewChatButton from "./NewChatButton";
 import ChatLabel from "./ChatLabel";
 import { useState } from "react";
-import GetAppSection from "./GetAppSection";
+// GetAppSection import removed - component is commented out
 import ProfileLink from "./ProfileLink";
 
 type SidebarProps = {

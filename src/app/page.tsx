@@ -9,7 +9,7 @@ import { useChatContext } from "@/context/ChatContext/ChatContext";
 
 const Home = () => {
   const [expand, setExpand] = useState<boolean>(false);
-  const { selectedChat, createNewChat, isLoading } = useChatContext();
+  const { selectedChat, isLoading } = useChatContext();
 
   // Scroll to bottom on new message
   useEffect(() => {
@@ -46,7 +46,9 @@ const Home = () => {
                 <div className="flex items-center gap-3 mb-4">
                   <Image src={assets.logo_icon} alt="" className="h-12 w-12" />
                 </div>
-                <p className="text-xl font-medium mb-8">Hi, I'm Deepseek</p>
+                <p className="text-xl font-medium mb-8">
+                  Hi, I&apos;m Deepseek
+                </p>
                 <p className="text-sm text-gray-400">
                   How can I help you today?
                 </p>

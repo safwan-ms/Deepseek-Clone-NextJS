@@ -50,18 +50,22 @@ export async function POST(req: NextRequest) {
 
     // Prepare messages for Groq API (OpenAI compatible)
     // Map existing messages to { role, content } format
-    const apiMessages = data.messages.map((msg: any) => ({
-      role: msg.role === "user" ? "user" : "assistant",
-      content: msg.content,
-    }));
+    const apiMessages = data.messages.map(
+      (msg: { role: string; content: string }) => ({
+        role: msg.role === "user" ? "user" : "assistant",
+        content: msg.content,
+      }),
+    );
 
     const completion = await openai.chat.completions.create({
       messages: apiMessages,
       model: "llama-3.3-70b-versatile",
     });
 
-    const message = completion.choices[0].message as any;
-    message.timestamp = Date.now();
+    const message = {
+      ...completion.choices[0].message,
+      timestamp: Date.now(),
+    };
 
     data.messages.push(message);
     data.save();

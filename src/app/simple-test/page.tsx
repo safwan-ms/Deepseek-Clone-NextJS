@@ -91,7 +91,7 @@ export default function SimpleTestPage() {
         {isLoaded && !isSignedIn && (
           <div className="p-4 bg-yellow-800 rounded-lg">
             <p className="text-yellow-200">
-              ✅ Clerk is loaded but you're not signed in. This is normal
+              ✅ Clerk is loaded but you&apos;re not signed in. This is normal
               behavior.
             </p>
           </div>
@@ -100,7 +100,7 @@ export default function SimpleTestPage() {
         {isLoaded && isSignedIn && (
           <div className="p-4 bg-green-800 rounded-lg">
             <p className="text-green-200">
-              ✅ Clerk is loaded and you're signed in!
+              ✅ Clerk is loaded and you&apos;re signed in!
             </p>
           </div>
         )}
