@@ -11,15 +11,15 @@ type SidebarProps = {
 };
 
 const Sidebar = ({ expand, setExpand }: SidebarProps) => {
-  const [openMenu, setOpenMenu] = useState({ id: 0, open: false });
+  const [openMenu, setOpenMenu] = useState({ id: "", open: false });
 
   return (
     <div
-      className={`flex flex-col justify-between bg-[#212327] pt-7 transition-all z-50 max-md:absolute max-md:h-screen ${
-        expand ? "p-4 w-64" : "md:w-20 w-0 max-md:overflow-hidden"
+      className={`flex flex-col justify-between bg-[#1b1b1c] text-[#e0e0e0] transition-all z-50 h-screen border-r border-[#303030] ${
+        expand ? "w-[260px] px-3 py-4" : "w-[60px] items-center py-4"
       }`}
     >
-      <div>
+      <div className="flex-1 overflow-hidden flex flex-col w-full">
         <SidebarToggler expand={expand} setExpand={setExpand} />
         <NewChatButton expand={expand} />
         <ChatLabel
@@ -29,8 +29,9 @@ const Sidebar = ({ expand, setExpand }: SidebarProps) => {
         />
       </div>
 
-      <div className="mb-5">
-        <GetAppSection expand={expand} />
+      <div className="flex-shrink-0 w-full mt-4">
+        {/* <GetAppSection expand={expand} /> */}{" "}
+        {/* Optional: Hide GetApp if not in screenshot */}
         <ProfileLink expand={expand} />
       </div>
     </div>

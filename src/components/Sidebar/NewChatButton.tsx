@@ -1,29 +1,49 @@
 import Image from "next/image";
 import { assets } from "../../../assets/assets";
 
+import { useChatContext } from "@/context/ChatContext/ChatContext";
+
 interface NewChatBtnProps {
   expand: boolean;
 }
 
 const NewChatButton = ({ expand }: NewChatBtnProps) => {
+  const { createNewChat } = useChatContext();
+
+  if (!expand) {
+    return (
+      <div
+        onClick={createNewChat}
+        className="flex justify-center cursor-pointer hover:bg-[#303030] p-2 rounded-lg transition-colors"
+      >
+        <Image
+          src={assets.new_icon}
+          alt="New Chat"
+          className="w-5 h-5 text-gray-400"
+          style={{
+            filter:
+              "invert(0.5) sepia(0) saturate(0) hue-rotate(0deg) brightness(1.2)",
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <button
-      className={`mt-8 flex items-center justify-center cursor-pointer ${
-        expand
-          ? "bg-primary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max"
-          : "group relative h-9 w-9 mx-auto hover:bg-gray-500/30 rounded-lg"
-      }`}
+      onClick={createNewChat}
+      className="flex items-center gap-2 bg-[#303030] hover:bg-[#424242] transition-colors rounded-full px-4 py-2.5 w-full text-white/90 text-sm font-medium mb-4"
     >
       <Image
-        className={expand ? "w-6" : "w-7"}
-        src={expand ? assets.chat_icon : assets.chat_icon_dull}
-        alt="Chat Icon"
+        className="w-4 h-4 text-gray-400"
+        src={assets.new_icon}
+        alt=""
+        style={{
+          filter:
+            "invert(0.5) sepia(0) saturate(0) hue-rotate(0deg) brightness(1.2)",
+        }}
       />
-      <div className="absolute w-max -top-12 -right-12 opacity-0 group-hover:opacity-100 transition bg-black text-white text-sm px-3 py-2 rounded-lg shadow-lg pointer-events-none">
-        New Chat
-        <div className="w-3 h-3 absolute bg-black rotate-45 left-4 -bottom-1.5"></div>
-      </div>
-      {expand && <p className="text-white text font-medium">New Chat</p>}
+      <span>New chat</span>
     </button>
   );
 };

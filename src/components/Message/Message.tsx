@@ -8,76 +8,74 @@ interface MessageProps {
 
 const Message = ({ role, content }: MessageProps) => {
   return (
-    <div className="flex flex-col items-center w-full max-w-3xl text-sm">
+    <div
+      className={`w-full text-sm ${role === "user" ? "flex justify-end" : "flex justify-start"}`}
+    >
       <div
-        className={`flex flex-col w-full mb-8 ${
-          role === "user" && "items-end"
-        }`}
+        className={`relative max-w-[85%] sm:max-w-[75%] px-5 py-3 rounded-2xl ${
+          role === "user"
+            ? "bg-[#303030] text-white rounded-tr-sm"
+            : "text-white/90 px-0"
+        } group`}
       >
-        <div
-          className={`group relative flex max-w-2xl py-3 rounded-xl ${
-            role === "user" ? "bg-[#414158] px-5" : "gap-3"
-          }`}
-        >
-          <div
-            className={`opacity-0 group-hover:opacity-100  absolute ${
-              role === "user" ? "-left-16 top-2.5" : "left-9 -bottom-6"
-            } transition-all`}
-          >
-            <div className="flex items-center gap-2 opacity-70">
-              {role === "user" ? (
-                <>
-                  <Image
-                    src={assets.copy_icon}
-                    alt="copy_icon"
-                    className="w-4 cursor-pointer"
-                  />
-                  <Image
-                    src={assets.pencil_icon}
-                    alt="copy_icon"
-                    className="w-4 cursor-pointer"
-                  />
-                </>
-              ) : (
-                <>
-                  <Image
-                    src={assets.copy_icon}
-                    alt="copy_icon"
-                    className="w-4.5 cursor-pointer"
-                  />
-
-                  <Image
-                    src={assets.regenerate_icon}
-                    alt="copy_icon"
-                    className="w-4 cursor-pointer"
-                  />
-                  <Image
-                    src={assets.like_icon}
-                    alt="copy_icon"
-                    className="w-4 cursor-pointer"
-                  />
-                  <Image
-                    src={assets.dislike_icon}
-                    alt="copy_icon"
-                    className="w-4 cursor-pointer"
-                  />
-                </>
-              )}
-            </div>
+        {/* User actions tooltip */}
+        {role === "user" && (
+          <div className="absolute -bottom-8 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-gray-400">
+            <Image
+              src={assets.copy_icon}
+              alt="copy"
+              className="w-4 h-4 cursor-pointer hover:text-white"
+            />
+            <Image
+              src={assets.pencil_icon}
+              alt="edit"
+              className="w-4 h-4 cursor-pointer hover:text-white"
+            />
           </div>
-          {role === "user" ? (
-            <span className="text-white/90">{content}</span>
-          ) : (
-            <>
+        )}
+
+        {/* AI Actions */}
+        {role !== "user" && (
+          <div className="absolute -bottom-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-3 text-gray-400">
+            <Image
+              src={assets.copy_icon}
+              alt="copy"
+              className="w-4 h-4 cursor-pointer hover:text-white"
+            />
+            <Image
+              src={assets.regenerate_icon}
+              alt="regen"
+              className="w-4 h-4 cursor-pointer hover:text-white"
+            />
+            <Image
+              src={assets.like_icon}
+              alt="like"
+              className="w-4 h-4 cursor-pointer hover:text-white"
+            />
+            <Image
+              src={assets.dislike_icon}
+              alt="dislike"
+              className="w-4 h-4 cursor-pointer hover:text-white"
+            />
+          </div>
+        )}
+
+        {role === "user" ? (
+          <p className="leading-relaxed">{content}</p>
+        ) : (
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 mt-1">
               <Image
-                alt="logo_icon"
-                className="h-9 w-9 p-1 border border-white/15 rounded-full"
+                alt="logo"
+                className="h-8 w-8 rounded-full border border-white/10 p-0.5"
                 src={assets.logo_icon}
               />
-              <div className="space-y-4 w-full overflow-scroll">{content}</div>
-            </>
-          )}
-        </div>
+            </div>
+            <div className="flex-1 space-y-2 overflow-hidden leading-relaxed">
+              {content}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

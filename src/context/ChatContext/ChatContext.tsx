@@ -9,11 +9,15 @@ export type ChatContextType = {
   chats: Chat[];
   selectedChat: Chat | null;
   setSelectedChat: (chat: Chat | null) => void;
+  sendMessage: (prompt: string) => Promise<void>;
+  isLoading: boolean;
   createNewChat: () => Promise<void>;
+  deleteChat: (chatId: string) => Promise<void>;
+  renameChat: (chatId: string, newName: string) => Promise<void>;
 };
 
 export const ChatContext = createContext<ChatContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useChatContext = () => {

@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
           success: false,
           message: "User not authorized",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         message: "Failed to fetch chats",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

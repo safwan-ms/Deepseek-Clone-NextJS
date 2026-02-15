@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { success: false, message: "User not authorized" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -18,21 +18,26 @@ export async function POST(req: NextRequest) {
     const { chatId, name } = await req.json();
 
     // Connect to the database and update the chat name
-    await Chat.findOneAndUpdate({ _id: chatId, userId }, { name });
+    const updatedChat = await Chat.findOneAndUpdate(
+      { _id: chatId, userId },
+      { name },
+      { new: true },
+    );
 
     return NextResponse.json({
       success: true,
       message: "Chat Renamed successfully",
+      data: updatedChat,
     });
   } catch (error) {
-    console.error("Error fetching chats:", error);
+    console.error("Error naming chat:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "",
+        message: "Failed to rename chat",
         error: error instanceof Error ? error.message : "Unknown Error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

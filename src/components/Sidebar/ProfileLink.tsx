@@ -11,16 +11,31 @@ const ProfileLink = ({ expand }: { expand: boolean }) => {
     <div
       onClick={!user ? () => openSignIn?.() : undefined}
       className={`flex items-center ${
-        expand ? "hover:bg-white/10 rounded-lg" : "justify-center w-full"
-      } gap-3 text-white/60 text-sm p-2 mt-2 cursor-pointer`}
+        expand ? "hover:bg-[#303030] rounded-lg px-2" : "justify-center"
+      } gap-3 text-white/80 text-sm p-2 cursor-pointer transition-colors`}
     >
       {user ? (
-        <UserButton />
+        <div className="w-7 h-7 rounded-full overflow-hidden">
+          <UserButton
+            appearance={{ elements: { userButtonAvatarBox: "w-7 h-7" } }}
+          />
+        </div>
       ) : (
-        <Image src={assets.profile_icon} alt="" className="w-7" />
+        <Image src={assets.profile_icon} alt="" className="w-7 opacity-70" />
       )}
 
-      {expand && <span>My Profile</span>}
+      {expand && (
+        <>
+          <div className="flex-1 truncate font-medium text-sm">
+            {user?.fullName || "User"}
+          </div>
+          <Image
+            src={assets.three_dots}
+            alt="Options"
+            className="w-4 h-4 opacity-60"
+          />
+        </>
+      )}
     </div>
   );
 };

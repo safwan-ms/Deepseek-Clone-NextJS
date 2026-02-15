@@ -11,22 +11,23 @@ export async function POST(req: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { success: false, message: "User not authorized" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     //Connect to the database and delete the chat
     await connectDB();
     await Chat.deleteOne({ _id: chatId, userId });
+    return NextResponse.json({ success: true, message: "Chat deleted" });
   } catch (error) {
     console.error("Error fetching chats:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "",
+        message: "Failed to delete chat",
         error: error instanceof Error ? error.message : "Unknown Error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
