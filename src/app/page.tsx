@@ -90,7 +90,7 @@ const Home = () => {
           </div>
 
           {/* Footer / Prompt Area */}
-          <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 md:px-6 pb-4 sm:pb-6 pt-2 bg-[#151517]">
+          <div className="sticky bottom-0 z-10 w-full max-w-4xl mx-auto px-3 sm:px-4 md:px-6 pb-4 sm:pb-6 pt-2 bg-[#151517]">
             <PromptBox />
             <p className="text-[10px] text-center mt-2 sm:mt-3 text-gray-500">
               AI-generated, for reference only
